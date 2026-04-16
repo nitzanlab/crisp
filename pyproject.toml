@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "projint"
+version = "0.1.0"
+description = "Projection-based interaction scoring between biological signals in single-cell data"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "scipy",
+    "scanpy",
+    "anndata",
+    "scikit-learn",
+    "matplotlib",
+    "seaborn",
+    "sift",
+]
+
+[project.optional-dependencies]
+gpu = ["cupy-cuda12x"]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["projint*"]
