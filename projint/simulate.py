@@ -105,6 +105,41 @@ def simulate_cyclic(
     return adata
 
 
+def add_gene_smoothness(adata, signal_a_key="label_a", signal_b_key="label_b"):
+    """
+    Compute per-gene smoothness w.r.t. two signals and store the minimum in adata.var.
+
+    For each signal, cells are sorted by signal value and the mean squared consecutive
+    difference of gene expression is computed. Lower = smoother = gene is structured
+    by that signal. The minimum across both signals is stored.
+
+    Parameters
+    ----------
+    adata : AnnData
+        Must have signal_a_key and signal_b_key in adata.obs, and adata.X as a dense array.
+    signal_a_key : str
+    signal_b_key : str
+
+    Side effects
+    ------------
+    Writes adata.var['smooth_A'], adata.var['smooth_B'], adata.var['gene_min_smoothness'].
+    Lower = smoother = gene is more structured by that signal.
+    """
+    X = adata.X if not hasattr(adata.X, "toarray") else adata.X.toarray()
+
+    def _smoothness(signal):
+        order = np.argsort(signal)
+        X_sorted = X[order]
+        return np.mean(np.diff(X_sorted, axis=0) ** 2, axis=0)
+
+    smooth_A = _smoothness(adata.obs[signal_a_key].values)
+    smooth_B = _smoothness(adata.obs[signal_b_key].values)
+    adata.var["smooth_A"] = smooth_A
+    adata.var["smooth_B"] = smooth_B
+    adata.var["gene_min_smoothness"] = np.minimum(smooth_A, smooth_B)
+    adata.var["gene_max_smoothness"] = np.maximum(smooth_A, smooth_B)
+
+
 def _make_cyclic_genes(n_cells, n_genes, w_cyclic, noise_level, std_cyclic):
     genes = np.zeros((n_cells, n_genes))
     for i in range(n_genes):
