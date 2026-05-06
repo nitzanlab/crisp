@@ -153,8 +153,18 @@ def compute_projection_similarity(
     num_sp_cell   = np.sum(ranks_A_cell_c * ranks_B_cell_c, axis=1)
     denom_sp_cell = np.linalg.norm(ranks_A_cell_c, axis=1) * np.linalg.norm(ranks_B_cell_c, axis=1)
     cell_spearman = num_sp_cell / (denom_sp_cell + 1e-12)
-    global_spearman = float(cell_spearman.mean())
     print(f"[timing] cell Spearman:     {time.time()-t0:.2f}s"); t0 = time.time()
+
+    # --- Global Spearman: rank proj_A and proj_B flattened, then Pearson on ranks ---
+    flat_A = proj_A.ravel()
+    flat_B = proj_B.ravel()
+    ranks_flat_A = np.argsort(np.argsort(flat_A)).astype(float)
+    ranks_flat_B = np.argsort(np.argsort(flat_B)).astype(float)
+    ranks_flat_A -= ranks_flat_A.mean()
+    ranks_flat_B -= ranks_flat_B.mean()
+    denom_sp_global = np.linalg.norm(ranks_flat_A) * np.linalg.norm(ranks_flat_B)
+    global_spearman = float(np.dot(ranks_flat_A, ranks_flat_B) / (denom_sp_global + 1e-12))
+    print(f"[timing] global Spearman:   {time.time()-t0:.2f}s"); t0 = time.time()
 
     # --- Gene scores: cosine similarity over cells, per gene ---
     num_gene = np.sum(proj_A * proj_B, axis=0)
@@ -163,7 +173,7 @@ def compute_projection_similarity(
 
     # --- Write results ---
     adata.obs["proj_sim_cell"]      = cell_scores
-    adata.obs["proj_spearman_cell2"] = cell_spearman
+    adata.obs["proj_spearman_cell"] = cell_spearman
     adata.obs["proj_sim_cell_mag_A"] = np.linalg.norm(proj_A, axis=1)
     adata.obs["proj_sim_cell_mag_B"] = np.linalg.norm(proj_B, axis=1)
 
@@ -188,7 +198,7 @@ def compute_projection_similarity(
     ranks_B_c = ranks_B - ranks_B.mean(axis=0)
     num_sp   = np.sum(ranks_A_c * ranks_B_c, axis=0)
     denom_sp = np.linalg.norm(ranks_A_c, axis=0) * np.linalg.norm(ranks_B_c, axis=0)
-    adata.var["proj_spearman_gene2"] = num_sp / (denom_sp + 1e-12)
+    adata.var["proj_spearman_gene"] = num_sp / (denom_sp + 1e-12)
     print(f"[timing] gene Spearman:     {time.time()-t0:.2f}s"); t0 = time.time()
 
     # Penalized gene score: suppress genes not structured by either signal.
