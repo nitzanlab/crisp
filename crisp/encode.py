@@ -1,6 +1,6 @@
 """
-projint.encode
-==============
+crisp.encode
+============
 Signal encoding methods that prepare a signal for use in SIFT.
 
 Each encoder reads a signal from adata.obs or adata.obsm and writes

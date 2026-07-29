@@ -1,7 +1,7 @@
 """
-projint.plot
-============
-Plotting helpers for projint results.
+crisp.plot
+==========
+Plotting helpers for crisp results.
 """
 
 import numpy as np

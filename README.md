@@ -1,31 +1,28 @@
-# projint
+# crisp
 
-**projint** is a Python package for quantifying interactions between biological signals in single-cell RNA-seq data using projection-based similarity scoring.
+**crisp** is a Python package for quantifying interactions between biological signals in single-cell RNA-seq data using projection-based similarity scoring.
 
-Given two signals — for example, spatial zonation and circadian rhythm — projint measures how much the structure of one signal is reflected in the other, at the level of the whole sample, individual cells, and individual genes.
+Given two signals — for example, spatial zonation and circadian rhythm — crisp measures how much the structure of one signal is reflected in the other, at the level of the whole sample, individual cells, and individual genes.
 
 ## Method
 
-For signals A and B and a gene expression matrix X, projint computes:
+For signals A and B and a gene expression matrix X, crisp computes:
 
 ```
-proj_A = X − SIFT(X | A)   # component of X explained by A's graph
-proj_B = X − SIFT(X | B)   # component of X explained by B's graph
-
-score = cosine_similarity(proj_A, proj_B)
+proj_A = component of X explained by A
+proj_B = component of X explained by B
 ```
 
-where SIFT ([Nitzan et al., Nature Communications 2024](https://www.nature.com/articles/s41467-024-44758-2)) filters gene expression through the graph defined by signal A (or B). A high score means the two signals share transcriptional structure — i.e., they interact.
+For each cell, the interaction score is the Pearson correlation between that cell's `proj_A` and `proj_B` values across genes. A high score means the two signals share transcriptional structure in that cell — i.e., they interact.
 
-Scores are computed at three levels:
-- **Global** — a single scalar summarizing the interaction across all cells and genes
-- **Cell** — per-cell cosine similarity (which cells drive the interaction)
-- **Gene** — per-gene cosine similarity (which genes carry the interaction)
+Scores are computed at two additional levels, both derived from the per-cell score:
+- **Global** — the mean per-cell score across all cells
+- **Gene** — each gene's average contribution to the per-cell score, decomposing it across genes
 
 ## Installation
 
 ```bash
-pip install projint
+pip install crisp
 ```
 
 The `sift` package is required. Install it from the [nitzanlab/sift](https://github.com/nitzanlab/sift) repository.
@@ -33,25 +30,25 @@ The `sift` package is required. Install it from the [nitzanlab/sift](https://git
 For GPU acceleration:
 
 ```bash
-pip install projint[gpu]
+pip install crisp[gpu]
 ```
 
 ## Quick start
 
 ```python
 import scanpy as sc
-import projint
+import crisp
 
 # Load data
 adata = sc.read_h5ad("your_data.h5ad")
 sc.pp.pca(adata)
 
 # Encode your signals
-projint.encode_onehot(adata, "cell_type")          # categorical signal
-projint.encode_circular(adata, "cell_cycle_phase") # cyclic signal
+crisp.encode_onehot(adata, "cell_type")          # categorical signal
+crisp.encode_circular(adata, "cell_cycle_phase") # cyclic signal
 
 # Compute interaction score
-score = projint.compute_projection_similarity(
+score = crisp.compute_projection_similarity(
     adata,
     signal_A="onehot_cell_type",
     signal_B="circular_cell_cycle_phase",
@@ -59,8 +56,9 @@ score = projint.compute_projection_similarity(
 print(f"Global interaction score: {score:.4f}")
 
 # Per-cell and per-gene scores are written to adata
-# adata.obs["proj_sim_cell"]  — cell-level scores
-# adata.var["proj_sim_gene"]  — gene-level scores
+# adata.obs["proj_pearson_cell"]         — cell-level scores
+# adata.var["proj_pearson_gene_contrib"] — gene-level contribution
+# adata.uns["proj_mean_cell_pearson"]    — global score (same as the return value)
 ```
 
 ## Signal encoders
@@ -72,15 +70,17 @@ print(f"Global interaction score: {score:.4f}")
 | `encode_circular` | cyclic discrete | cell cycle phase, ZT timepoint |
 | `encode_spatial` | spatial coordinates | spatial transcriptomics |
 
-## Tutorials
+## Reproducibility
 
-See the [`tutorials/`](tutorials/) folder for example notebooks:
+`pyproject.toml` lists minimum versions matching the environment analyses were run in (Python 3.11, conda-forge). For an exact, full reproduction of that environment (including transitive dependencies), see [`environment.yml`](environment.yml):
 
-- [`simulation.ipynb`](tutorials/simulation.ipynb) — Validates the framework on synthetic data with controlled interaction levels
+```bash
+conda env create -f environment.yml
+```
 
 ## Citation
 
-If you use projint, please cite:
+If you use crisp, please cite:
 
 > Nitzan et al. (2024). *Gene expression cartography*. Nature Communications.
 > https://doi.org/10.1038/s41467-024-44758-2
