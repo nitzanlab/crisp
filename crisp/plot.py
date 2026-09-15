@@ -44,7 +44,7 @@ def save_plot(path):
     plt.close()
 
 
-def plot_score_pca(adata, score_key="proj_sim_cell", group_key="permuted", save=None):
+def plot_score_pca(adata, score_key="proj_pearson_cell", group_key="permuted", save=None):
     """
     PCA plot colored by cell score and an optional grouping variable (e.g. 'permuted').
 
@@ -73,7 +73,7 @@ def plot_score_pca(adata, score_key="proj_sim_cell", group_key="permuted", save=
     )
 
 
-def plot_score_histogram(adata, score_key="proj_sim_cell", group_key="permuted", save=None):
+def plot_score_histogram(adata, score_key="proj_pearson_cell", group_key="permuted", save=None):
     """
     Histogram of cell scores, optionally split by a grouping variable.
 

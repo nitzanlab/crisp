@@ -17,7 +17,7 @@ dependencies = [
     "scikit-learn>=1.7.2",
     "matplotlib>=3.10.7",
     "seaborn>=0.13.2",
-    "sift>=6.0.0",
+    "sift-sc>=0.1.0",
 ]
 
 [project.optional-dependencies]

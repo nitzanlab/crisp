@@ -1,5 +1,6 @@
 from .core import compute_projection_similarity
 from .encode import encode_obs, encode_onehot, encode_circular,  encode_spatial
+from .simulate import simulate_cyclic_processes
 from .plot import plot_pca, plot_umap, save_plot, plot_score_pca, plot_score_histogram
 
 __version__ = "0.1.0"
@@ -9,6 +10,7 @@ __all__ = [
     "encode_onehot",
     "encode_circular",
     "encode_spatial",
+    "simulate_cyclic_processes",
     "plot_pca",
     "plot_umap",
     "save_plot",

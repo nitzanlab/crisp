@@ -25,7 +25,7 @@ Scores are computed at two additional levels, both derived from the per-cell sco
 pip install crisp
 ```
 
-The `sift` package is required. Install it from the [nitzanlab/sift](https://github.com/nitzanlab/sift) repository.
+This installs [`sift-sc`](https://github.com/nitzanlab/sift-sc) automatically as a dependency.
 
 For GPU acceleration:
 
