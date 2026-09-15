@@ -22,15 +22,15 @@ Scores are computed at two additional levels, both derived from the per-cell sco
 ## Installation
 
 ```bash
-pip install crisp
+pip install crisp-sc
 ```
 
-This installs [`sift-sc`](https://github.com/nitzanlab/sift-sc) automatically as a dependency.
+This installs [`sift-sc`](https://github.com/nitzanlab/sift-sc) automatically as a dependency. Despite the distribution name, you still `import crisp` in Python (see below).
 
 For GPU acceleration:
 
 ```bash
-pip install crisp[gpu]
+pip install crisp-sc[gpu]
 ```
 
 ## Quick start
