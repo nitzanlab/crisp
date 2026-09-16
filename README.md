@@ -2,7 +2,7 @@
 
 **crisp** is a Python package for quantifying interactions between biological signals in single-cell RNA-seq data using projection-based similarity scoring.
 
-Given two signals — for example, spatial zonation and circadian rhythm — crisp measures how much the structure of one signal is reflected in the other, at the level of the whole sample, individual cells, and individual genes.
+Given two signals, for example spatial zonation and circadian rhythm, crisp measures how much the structure of one signal is reflected in the other, at the level of the whole sample, individual cells, and individual genes.
 
 ## Method
 
@@ -16,16 +16,14 @@ proj_B = component of X explained by B
 For each cell, the interaction score is the Pearson correlation between that cell's `proj_A` and `proj_B` values across genes. A high score means the two signals share transcriptional structure in that cell — i.e., they interact.
 
 Scores are computed at two additional levels, both derived from the per-cell score:
-- **Global** — the mean per-cell score across all cells
-- **Gene** — each gene's average contribution to the per-cell score, decomposing it across genes
+- **Global** : the mean per-cell score across all cells
+- **Gene** : each gene's average contribution to the per-cell score, decomposing it across genes
 
 ## Installation
 
 ```bash
 pip install crisp-sc
 ```
-
-This installs [`sift-sc`](https://github.com/nitzanlab/sift-sc) automatically as a dependency. Despite the distribution name, you still `import crisp` in Python (see below).
 
 For GPU acceleration:
 
@@ -83,6 +81,8 @@ For the notebooks reproducing the analyses in the paper, see [nitzanlab/crisp_re
 ## Citation
 
 If you use crisp, please cite:
+
+
 
 > Nitzan et al. (2024). *Gene expression cartography*. Nature Communications.
 > https://doi.org/10.1038/s41467-024-44758-2
