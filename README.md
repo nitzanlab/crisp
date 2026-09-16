@@ -78,6 +78,8 @@ print(f"Global interaction score: {score:.4f}")
 conda env create -f environment.yml
 ```
 
+For the notebooks reproducing the analyses in the paper, see [nitzanlab/crisp_reproducibility](https://github.com/nitzanlab/crisp_reproducibility).
+
 ## Citation
 
 If you use crisp, please cite:
