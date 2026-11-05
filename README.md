@@ -84,8 +84,8 @@ If you use crisp, please cite:
 
 
 
-> Nitzan et al. (2024). *Gene expression cartography*. Nature Communications.
-> https://doi.org/10.1038/s41467-024-44758-2
+> Sasson et al. (2026). Uncovering cross-signal interactions in single-cell and spatial omics. Submitted.
+> https://doi.org/10.64898/2026.11.03.763866
 
 ## License
 
